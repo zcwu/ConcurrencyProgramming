@@ -18,19 +18,26 @@ public class FixedThreadPoolTest {
         }
         // test for callable
         int sum = 0;
+        ConcurrentLinkedQueue<Future<Integer>> futureQueue = new ConcurrentLinkedQueue<>();
+        CountDownLatch latch = new CountDownLatch(20);
         for (int i = 0; i < 20; ++i) {
             Future<Integer> future = executorService.submit(() -> {
                 TimeUnit.SECONDS.sleep(5);
                 System.out.println(Thread.currentThread().getName());
+                latch.countDown();
                 return Thread.currentThread().getPriority();
             });
-            try {
-                sum += future.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            futureQueue.add(future);
+        }
+        try {
+            latch.await();
+            while (!futureQueue.isEmpty()) {
+                sum += futureQueue.poll().get();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
         System.out.println(sum);
 
