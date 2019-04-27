@@ -6,16 +6,16 @@ public class FixedThreadPoolTest {
 
     public static void main(String[] args) {
         // test runnable
-//        for (int i = 0; i < 20; ++i) {
-//            executorService.submit(() -> {
-//                try {
-//                    TimeUnit.SECONDS.sleep(5);
-//                    System.out.println(Thread.currentThread().getName());
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            });
-//        }
+        for (int i = 0; i < 20; ++i) {
+            executorService.submit(() -> {
+                try {
+                    TimeUnit.SECONDS.sleep(5);
+                    System.out.println(Thread.currentThread().getName());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
         // test for callable
         int sum = 0;
         for (int i = 0; i < 20; ++i) {
@@ -36,5 +36,7 @@ public class FixedThreadPoolTest {
             }
         }
         System.out.println(sum);
+
+        executorService.shutdown();
     }
 }
