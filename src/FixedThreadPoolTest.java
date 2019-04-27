@@ -19,13 +19,10 @@ public class FixedThreadPoolTest {
         // test for callable
         int sum = 0;
         for (int i = 0; i < 20; ++i) {
-            Future<Integer> future = executorService.submit(new Callable<Integer>() {
-                @Override
-                public Integer call() throws Exception {
-                    TimeUnit.SECONDS.sleep(5);
-                    System.out.println(Thread.currentThread().getName());
-                    return Thread.currentThread().getPriority();
-                }
+            Future<Integer> future = executorService.submit(() -> {
+                TimeUnit.SECONDS.sleep(5);
+                System.out.println(Thread.currentThread().getName());
+                return Thread.currentThread().getPriority();
             });
             try {
                 sum += future.get();
